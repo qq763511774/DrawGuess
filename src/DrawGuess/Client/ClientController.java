@@ -2,19 +2,20 @@ package DrawGuess.Client;
 
 import DrawGuess.Bag;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.Scanner;
 
-public class TestClient {
-    public static void main(String args[]){
-        Scanner input = new Scanner(System.in);
-        String username = input.next();
+public class ClientController {
+    ClientUI ui;
+    public ClientController( ClientUI clientUI ){
+        ui = clientUI;
+    }
+    // Test part
+    public void dealwith(String IPAddress, String username){
         try {
-            Socket socket = new Socket("192.168.1.201", 8765);
+            Socket socket = new Socket(IPAddress, 8765);
 
             Bag bag = new Bag(username, "Hello");
 
@@ -40,6 +41,5 @@ public class TestClient {
         }catch (ClassNotFoundException e){
             e.printStackTrace();
         }
-
     }
 }
