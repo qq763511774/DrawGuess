@@ -50,8 +50,8 @@ public class ServerThread extends Thread {
         try{
             obj = objectInputStream.readObject();
             bag = (Bag)obj;
-            userInfo.setName(bag.name);
-            System.out.println(bag.name+ ": " + bag.message);
+            userInfo.setName(bag.userName);
+            System.out.println(bag.userName+ ": " + bag.message);
             Bag returnmsg = new Bag("Server", "Sended Successful!");
             sendToClient(returnmsg);
 
@@ -72,7 +72,7 @@ public class ServerThread extends Thread {
 
                 obj = objectInputStream.readObject();
                 bag = (Bag)obj;
-                System.out.println(bag.name+ ": " + bag.message);
+                System.out.println(bag.userName+ ": " + bag.message);
                 ServerSender.sendMessage(bag);
 
                 /*
