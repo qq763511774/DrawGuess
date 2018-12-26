@@ -9,7 +9,6 @@ public class ClientUI extends JFrame {
     public JLabel content;
     public JPanel drawPanel;
     public JPanel colorPanel;
-    public JPanel waitPanel;
     public JPanel drawLeftPanel;
     public JPanel centerPanel;
     public JTextField jTextField;
@@ -45,10 +44,9 @@ public class ClientUI extends JFrame {
             int width = (int) box.getSelectedItem();
             stroke = new BasicStroke(width);
             g.setStroke(stroke);
-
             int x2 = e.getX();
             int y2 = e.getY();
-            g.drawLine(x1, y1, x2, y2);
+            controller.DrawAndSend(x1,x2,y1,y2,color,width);
             // x1 = x2;
             // y1 = y2;
 
@@ -99,6 +97,7 @@ public class ClientUI extends JFrame {
 
                 // 控制器建立连接
                 controller.dealwith(IPAddressText, usernameText);
+
 
                 // try {
                 //     socket = new Socket(str1, 9090);
