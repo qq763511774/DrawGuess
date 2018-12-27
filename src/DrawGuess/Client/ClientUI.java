@@ -46,9 +46,10 @@ public class ClientUI extends JFrame {
             g.setStroke(stroke);
             int x2 = e.getX();
             int y2 = e.getY();
-            controller.DrawAndSend(x1,x2,y1,y2,color,width);
-            // x1 = x2;
-            // y1 = y2;
+            controller.DrawAndSend(x1,x2,y1,y2,color.getRGB(),width);
+//            System.out.println(x1 + " x1");
+             x1 = x2;
+             y1 = y2;
 
             // !调用controller的发送函数传递信息 (x1, y1, x2, y2,g.getColor().getRGB(),width);
 
@@ -71,6 +72,14 @@ public class ClientUI extends JFrame {
                 // 弹窗破坏游戏体验！
                 // JOptionPane.showMessageDialog(null, "发送内容不能为空！");
             } else {
+//                String sended;
+//                do{
+//                    sended = controller.SendMsg(str);
+//                }while(sended == "");
+                //类似以上操作，因为controller.SendMsg(str)会返回一个String
+                controller.SendMsg(str);
+
+
                 // jTextField.setText() = （!调用controller的发送函数传递信息(str), 失败返回原字符串，成功返回空串）
 
                 // try {
@@ -96,9 +105,13 @@ public class ClientUI extends JFrame {
             } else {
 
                 // 控制器建立连接
-                controller.dealwith(IPAddressText, usernameText);
-
-
+                boolean isConnected;
+                do{
+                    isConnected = controller.connect(IPAddressText, usernameText);
+                }while(isConnected == false);
+                if(isConnected == true) System.out.println("connected");
+                addDrawPanel();
+                controller.start();
                 // try {
                 //     socket = new Socket(str1, 9090);
                 // } catch (Exception e1) {
@@ -238,7 +251,7 @@ public class ClientUI extends JFrame {
 
         //	this.add(waitPanel);
         // 画的面板
-//		addDrawPanel();
+		//addDrawPanel();
 //		addGuessPanel();
         this.setLayout(new BorderLayout());
         //waitPanel.setLayout(null);
@@ -253,6 +266,8 @@ public class ClientUI extends JFrame {
         }
         */
         controller = new ClientController(this);
+        //if(controller.connect(IPAddress.getText(),username.getText()) == true){System.out.println("connected!");controller.start();}
+        //else JOptionPane.showMessageDialog(null, "连接失败！");
     }
 
     // 创建画布面板
