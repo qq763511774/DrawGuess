@@ -43,13 +43,6 @@ public class ServerThread extends Thread {
         objectOutputStream = new ObjectOutputStream(client.getOutputStream());
         Object obj;
         Bag bag;
-        // debug
-        bag = new Bag("metal","draw");
-        bag.status = 3;
-        objectOutputStream.writeObject(bag);
-        objectOutputStream.flush();
-        // debug
-
 
         // String userName = bufferedReader.readLine();
         userInfo = new UserInfo();
@@ -74,6 +67,13 @@ public class ServerThread extends Thread {
                 把返回的信息发还给用户
             }
             */
+            
+            // debug
+            returnmsg = new Bag("metal","draw");
+            returnmsg.status = 3;
+            ServerSender.sendMessage(returnmsg);
+            // debug
+            
             long iiii = System.currentTimeMillis();
             long jjjj = 0;
             while( bag.message!="DISCONNECT" ){
