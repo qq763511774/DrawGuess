@@ -18,12 +18,14 @@ public class ServerMessageTransfer {
         System.out.println("服务器成功建立于端口" + port);
 
         // 多线程处理每个用户的连接
+        int uid = 0;
         while( true ){
             Socket socket = server.accept();
             // debug
             System.out.println("New client connection: " + socket.getRemoteSocketAddress().toString());
 
-            ServerThread serverThread = new ServerThread(socket);
+            ServerThread serverThread = new ServerThread(socket, uid);
+            uid++;
             serverThread.start();
         }
     }

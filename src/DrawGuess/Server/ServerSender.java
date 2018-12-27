@@ -31,4 +31,21 @@ public class ServerSender {
         }
     }
 
+    public static boolean allReady(){
+        boolean flag = true;
+        Iterator<ServerThread> iterator = serverThreadArrayList.iterator();
+        while( iterator.hasNext()){
+            if( !iterator.next().getUserInfo().isReady ){
+                flag = false;
+                break;
+            }
+        }
+
+        return flag;
+    }
+
+    public static int getThreadNumber(){
+        return serverThreadArrayList.size();
+    }
+
 }

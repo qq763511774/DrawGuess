@@ -12,8 +12,10 @@ public class ServerThread extends Thread {
     private ObjectOutputStream objectOutputStream;
     private UserInfo userInfo;
 
-    public ServerThread(Socket client){
+    public ServerThread(Socket client, int uid) {
+        userInfo = new UserInfo();
         this.client = client;
+        userInfo.setUid(uid);
     }
 
     public UserInfo getUserInfo() {
@@ -21,9 +23,9 @@ public class ServerThread extends Thread {
     }
 
     public void run() {
-        try{
+        try {
             processSocket();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -34,30 +36,27 @@ public class ServerThread extends Thread {
     }
 
 
-    private void processSocket() throws IOException{
-        // InputStream inputStream = client.getInputStream();
-        // outputStream = client.getOutputStream();
-        // BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-
-        objectInputStream = new ObjectInputStream( new BufferedInputStream(client.getInputStream()));
+    private void processSocket() throws IOException {
+        objectInputStream = new ObjectInputStream(new BufferedInputStream(client.getInputStream()));
         objectOutputStream = new ObjectOutputStream(client.getOutputStream());
         Object obj;
         Bag bag;
 
-        // String userName = bufferedReader.readLine();
-        userInfo = new UserInfo();
-        // userInfo.setName(userName);
 
-        try{
+        try {
             obj = objectInputStream.readObject();
-            bag = (Bag)obj;
+            bag = (Bag) obj;
+
             userInfo.setName(bag.userName);
-            System.out.println(bag.userName+ ": " + bag.message);
-            Bag returnmsg = new Bag("Server", "Sended Successful!");
+            userInfo.isReady = false;
+
+            System.out.println(bag.userName + ": " + bag.message);
+
+            Bag returnmsg = new Bag("Server", "" + userInfo.getUid());
             sendToClient(returnmsg);
 
             ServerSender.addClient(this);
-            ServerSender.sendMessage(new Bag("Server","Welcome "+ this.userInfo.getName()));
+            ServerSender.sendMessage(new Bag("Server", "Welcome " + this.userInfo.getName()));
 
             /*
             从用户那里收到一条信息 采用序列化的类的实例
@@ -67,21 +66,47 @@ public class ServerThread extends Thread {
                 把返回的信息发还给用户
             }
             */
-            
-            // debug
-            returnmsg = new Bag("metal","draw");
-            returnmsg.status = 3;
-            ServerSender.sendMessage(returnmsg);
-            // debug
-            
-            long iiii = System.currentTimeMillis();
-            long jjjj = 0;
-            while( bag.message!="DISCONNECT" ){
+
+            // long iiii = System.currentTimeMillis();
+            // long jjjj = 0;
+            while (true) {
 
                 obj = objectInputStream.readObject();
-                bag = (Bag)obj;
-                System.out.println(bag.userName+ ": " + bag.message);
-                ServerSender.sendMessage(bag);
+                bag = (Bag) obj;
+                System.out.println(bag.userName + ": " + bag.message);
+
+                if (bag.status == 1) {
+                    // 交给后台判断胜负
+                    String tempString = GameThread.judge(bag.message);
+                    String 结果 = tempString.substring(0, 3);
+                    String 处理串 = tempString.substring(4);
+
+                    // 把结果发送给所有人
+                    if (结果.equals("YES")) {
+                        ServerSender.sendMessage(new Bag("Server", userInfo.getName() + "猜对了答案"));
+                    } else {
+                        bag.message = 处理串;
+                        ServerSender.sendMessage(bag);
+                    }
+                } else if (bag.status == 2) { // point info
+                    // 直接进行转发
+                    ServerSender.sendMessage(bag);
+                } else if (bag.status == 3) { // 收到的状态信息
+                    if (bag.message == "DISCONNECT") break; // 客户主动断开连接
+
+                    if (bag.message == "setReady") {
+                        userInfo.isReady = true;
+                        if (ServerSender.allReady()) { // 所有人都准备好了
+                            // 开始游戏
+                            GameThread.startGame(ServerSender.getThreadNumber());
+                        }
+                    }
+
+                    if (bag.message == "cancelReady") {
+                        userInfo.isReady = false;
+                    }
+
+                }
 
                 /*
                 if((System.currentTimeMillis() - iiii) / 1000 > jjjj ){
@@ -90,11 +115,11 @@ public class ServerThread extends Thread {
                 }
                 if( (System.currentTimeMillis() - iiii) / 1000 >= 20 ) break;
                 */
+
+
             }
-        }
-        catch (IOException e){
-        }
-        catch (ClassNotFoundException e){
+        } catch (IOException e) {
+        } catch (ClassNotFoundException e) {
             System.out.println("ClassNotFound");
         }
         /* finally {
@@ -112,7 +137,7 @@ public class ServerThread extends Thread {
 
     }
 
-    public void closeMe() throws IOException{
+    public void closeMe() throws IOException {
         ServerSender.deleteClient(this);
         client.close();
     }
