@@ -108,11 +108,12 @@ public class ClientUI extends JFrame {
             	//addDrawPanel();
             	PopDialog("正在连接当中。。。请稍后","你画我猜");
                 // 控制器建立连接
-                boolean isConnected;
+                boolean isConnected = false;
                 
-                do{
+                for( int i = 0; i < 5; i++ ){
                     isConnected = controller.connect(IPAddressText, usernameText);
-                }while(isConnected == false);
+                    if( isConnected ) break;
+                }
                 if(isConnected == true) {
                 	System.out.println("connected");
                 	TransformToGuessGame();
