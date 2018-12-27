@@ -100,7 +100,7 @@ public class ClientController extends Thread{
             ui.g.drawLine(x1,y1,x2,y2);
         }
     }
-
+    
     private void SendDraw(int x1,int x2,int y1,int y2,int color,int width){
         Bag bag = new Bag(userName,x1,x2,y1,y2,color,width);
         try{

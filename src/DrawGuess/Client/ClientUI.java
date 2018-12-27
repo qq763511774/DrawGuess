@@ -22,6 +22,7 @@ public class ClientUI extends JFrame {
     public JTextField IPAddress;
     public JTextField username;
     public boolean connect;
+    public JPanel loginPanel; // 登录面板
     //鼠标监听器
     MouseAdapter mouseAdapter = new MouseAdapter() {
 
@@ -41,7 +42,7 @@ public class ClientUI extends JFrame {
         }
 
         public void mouseDragged(MouseEvent e) {
-            int width = (int) box.getSelectedItem();
+            int width = (Integer) box.getSelectedItem();
             stroke = new BasicStroke(width);
             g.setStroke(stroke);
             int x2 = e.getX();
@@ -92,9 +93,10 @@ public class ClientUI extends JFrame {
 
         }
     };
+    
     // 登录按钮监听器
     ActionListener loginButtonListener = new ActionListener() {
-
+    	
         public void actionPerformed(ActionEvent e) {
             //获取发送框的内容
             String IPAddressText = IPAddress.getText();
@@ -103,15 +105,22 @@ public class ClientUI extends JFrame {
                     || usernameText == null || usernameText.equals("")) {
                 JOptionPane.showMessageDialog(null, "参数错误！");
             } else {
-
+            	//addDrawPanel();
+            	PopDialog("正在连接当中。。。请稍后","你画我猜");
                 // 控制器建立连接
-                boolean isConnected;
-                do{
+                boolean isConnected = false;
+                
+                for( int i = 0; i < 5; i++ ){
                     isConnected = controller.connect(IPAddressText, usernameText);
-                }while(isConnected == false);
-                if(isConnected == true) System.out.println("connected");
-                addDrawPanel();
-                controller.start();
+                    if( isConnected ) break;
+                }
+                if(isConnected == true) {
+                	System.out.println("connected");
+                	TransformToGuessGame();
+                	PopDialog("水果","提示");
+                	content.setText("猜的提示信息: "+"水果");
+                	controller.start();
+                }
                 // try {
                 //     socket = new Socket(str1, 9090);
                 // } catch (Exception e1) {
@@ -123,9 +132,9 @@ public class ClientUI extends JFrame {
                 //     jtf.setText("");
                 // } catch (IOException e1) {
                 //     e1.printStackTrace();
-                // }
+                // */
             }
-
+            
         }
     };
     ActionListener exitButtonListener = new ActionListener() {
@@ -196,8 +205,8 @@ public class ClientUI extends JFrame {
         username = new JTextField(20);
 
         // ==== 初始化登陆面板
-
-        JPanel loginPanel = new JPanel(); // 登录面板
+        loginPanel = new JPanel();
+       
         loginPanel.setBackground(Color.decode("0xee0000")); // 登录框背景颜色
         // loginPanel.setLayout(new BorderLayout());
         // label.setPreferredSize(new Dimension(0,50));
@@ -270,6 +279,16 @@ public class ClientUI extends JFrame {
         //else JOptionPane.showMessageDialog(null, "连接失败！");
     }
 
+    // remove login panel and transform
+    public void TransformToGuessGame() {
+    	this.remove(loginPanel);
+    	this.addDrawPanel();
+    	this.addGuessPanel();
+    }
+    public void TransformToDrawGame() {
+    	this.remove(loginPanel);
+    	this.addDrawPanel();
+    }
     // 创建画布面板
     public void addDrawPanel() {
         drawPanel = new JPanel();
@@ -360,7 +379,9 @@ public class ClientUI extends JFrame {
         this.setVisible(true);
         g = (Graphics2D) centerPanel.getGraphics();
     }
-
+    public void PopDialog(String str,String str2) {
+    	JOptionPane.showMessageDialog(null, str,str2,JOptionPane.PLAIN_MESSAGE);
+    }
     //添加猜面板的函数
     public void addGuessPanel() {
         content.setText("猜的提示信息");
@@ -370,5 +391,5 @@ public class ClientUI extends JFrame {
         this.setVisible(true);
     }
 
-
+    
 }
