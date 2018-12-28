@@ -116,10 +116,17 @@ public class ClientUI extends JFrame {
                 }
                 if(isConnected == true) {
                 	System.out.println("connected");
-                	TransformToGuessGame();
                 	PopDialog("水果","提示");
-                	content.setText("猜的提示信息: "+"水果");
                 	controller.start();
+                	if(controller.GetDGControl().equals("draw")){
+                	    System.out.println("UI:draw!");
+                        TransformToDrawGame();
+                    }
+                	if(controller.GetDGControl().equals("guess")){
+                	    System.out.println("UI:guess!");
+                	    TransformToGuessGame();
+                        content.setText("猜的提示信息: "+"水果");
+                    }
                 }
                 // try {
                 //     socket = new Socket(str1, 9090);
@@ -378,6 +385,7 @@ public class ClientUI extends JFrame {
         centerPanel.addMouseMotionListener(mouseAdapter);
         this.setVisible(true);
         g = (Graphics2D) centerPanel.getGraphics();
+        sendButton.setEnabled(false);
     }
     public void PopDialog(String str,String str2) {
     	JOptionPane.showMessageDialog(null, str,str2,JOptionPane.PLAIN_MESSAGE);
@@ -385,7 +393,7 @@ public class ClientUI extends JFrame {
     //添加猜面板的函数
     public void addGuessPanel() {
         content.setText("猜的提示信息");
-        sendButton.setEnabled(false);
+        sendButton.setEnabled(true);
         drawLeftPanel.remove(colorPanel);
         drawLeftPanel.repaint();
         this.setVisible(true);
