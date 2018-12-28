@@ -25,19 +25,16 @@ public class ServerSender {
     }
 
     public static void sendMessage(Bag msg) throws IOException{
-        Iterator<ServerThread> iterator = serverThreadArrayList.iterator();
-        while( iterator.hasNext()){
-            iterator.next().sendToClient(msg);
+        for (ServerThread aServerThreadArrayList : serverThreadArrayList) {
+            aServerThreadArrayList.sendToClient(msg);
         }
     }
 
-    public static boolean allReady(){
-        boolean flag = true;
-        Iterator<ServerThread> iterator = serverThreadArrayList.iterator();
-        while( iterator.hasNext()){
-            if( !iterator.next().getUserInfo().isReady ){
-                flag = false;
-                break;
+    public static int counterReady(){
+        int flag = 0;
+        for (ServerThread aServerThreadArrayList : serverThreadArrayList) {
+            if (!aServerThreadArrayList.getUserInfo().isReady) {
+                flag ++;
             }
         }
 
@@ -46,6 +43,16 @@ public class ServerSender {
 
     public static int getThreadNumber(){
         return serverThreadArrayList.size();
+    }
+
+    public static ArrayList<Integer> getUids(){
+        ArrayList<Integer> uids = new ArrayList<>();
+
+        for (ServerThread aServerThreadArrayList : serverThreadArrayList) {
+            uids.add(aServerThreadArrayList.getUserInfo().getUid());
+        }
+
+        return uids;
     }
 
 }

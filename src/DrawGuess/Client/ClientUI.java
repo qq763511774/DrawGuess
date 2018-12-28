@@ -22,7 +22,9 @@ public class ClientUI extends JFrame {
     public JTextField IPAddress;
     public JTextField username;
     public boolean connect;
+    public JButton readyButton;
     public JPanel loginPanel; // 登录面板
+
     //鼠标监听器
     MouseAdapter mouseAdapter = new MouseAdapter() {
 
@@ -78,7 +80,7 @@ public class ClientUI extends JFrame {
 //                    sended = controller.SendMsg(str);
 //                }while(sended == "");
                 //类似以上操作，因为controller.SendMsg(str)会返回一个String
-                controller.SendMsg(str);
+                jTextField.setText( controller.SendMsg(str));
 
 
                 // jTextField.setText() = （!调用controller的发送函数传递信息(str), 失败返回原字符串，成功返回空串）
@@ -144,43 +146,19 @@ public class ClientUI extends JFrame {
             
         }
     };
-    ActionListener exitButtonListener = new ActionListener() {
+    ActionListener exitButtonListener = e -> System.exit(0);
+
+    ActionListener 输入框发送监听 = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
-            System.exit(0);
+            sendButton.doClick();
         }
     };
-    KeyListener keyListener = new KeyListener() {
 
-        public void keyTyped(KeyEvent e) {
-            // TODO Auto-generated method stub
-
-        }
-
-        public void keyPressed(KeyEvent e) {
-            // TODO Auto-generated method stub
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-
-                // 直接调用按下发送按钮的动作
-                sendButton.doClick();
-
-                // String str = jTextField.getText();
-                // if (str == null || str.equals("")) {
-                //     JOptionPane.showMessageDialog(null, "发送内容不能为空！");
-                // } else {
-                //     try {
-                //         control.dos.writeUTF(str);
-                //         jtf.setText("");
-                //     } catch (IOException e1) {
-                //         e1.printStackTrace();
-                //     }
-                // }
-            }
-        }
-
-        public void keyReleased(KeyEvent e) {
-            // TODO Auto-generated method stub
-
+    ActionListener readyButtonListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.changeReady();
         }
     };
 
@@ -361,8 +339,8 @@ public class ClientUI extends JFrame {
         jTextArea = new JTextArea();
         jTextArea.setLineWrap(true);
         JScrollPane jScrollPane = new JScrollPane(jTextArea);
-        jScrollPane.addKeyListener(keyListener);
         jTextField = new JTextField(11);
+        jTextField.addActionListener(输入框发送监听);
         content = new JLabel();
         sendButton = new JButton();
         sendButton.setText("发送");
@@ -373,6 +351,15 @@ public class ClientUI extends JFrame {
 
         drawRightPanel.add(jScrollPane);
         drawRightPanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        readyButton = new JButton("准备");
+        readyButton.setFocusPainted(false);
+        readyButton.setFont(new Font("方正大黑_GBK", Font.PLAIN, 20));
+        readyButton.addActionListener(readyButtonListener);
+        colorPanel.add(readyButton);
+        readyButton.setLocation(540, 10);
+        readyButton.setSize(120, 40);
+
 
         content.setPreferredSize(new Dimension(0, 20));
         drawLeftPanel.add(content, BorderLayout.NORTH);
@@ -393,8 +380,13 @@ public class ClientUI extends JFrame {
     //添加猜面板的函数
     public void addGuessPanel() {
         content.setText("猜的提示信息");
+<<<<<<< HEAD
         sendButton.setEnabled(true);
         drawLeftPanel.remove(colorPanel);
+=======
+        // sendButton.setEnabled(true);
+        // drawLeftPanel.remove(colorPanel);
+>>>>>>> upstream/master
         drawLeftPanel.repaint();
         this.setVisible(true);
     }

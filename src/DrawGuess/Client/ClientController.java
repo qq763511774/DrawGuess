@@ -138,11 +138,11 @@ public class ClientController extends Thread{
             objectOutputStream.writeObject(bag);
             objectOutputStream.flush();
             System.out.println("message sended!");
-            return str;
+            return "";
         }
         catch (IOException e){
             e.printStackTrace();
-            return "";
+            return str;
         }
     }
 
@@ -166,6 +166,7 @@ public class ClientController extends Thread{
         }
     }
 
+<<<<<<< HEAD
     public void SetReady(){
         Bag bag = new Bag(userInfo.getName(),"setReady");
         bag.status = 3;
@@ -189,5 +190,9 @@ public class ClientController extends Thread{
     }
     public String GetDGControl(){
         return DGControl;
+=======
+    public void changeReady(){
+        // 向服务器更新准备状态
+>>>>>>> upstream/master
     }
 }
