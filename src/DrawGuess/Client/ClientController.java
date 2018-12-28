@@ -1,6 +1,7 @@
 package DrawGuess.Client;
 
 import DrawGuess.Bag;
+import DrawGuess.UserInfo;
 
 import java.awt.*;
 import java.io.*;
@@ -14,14 +15,17 @@ public class ClientController extends Thread{
     private String userName = "annotation";
     private String DGControl = "draw";
     private String IPAddress;
+    private UserInfo userInfo;
 
     public ClientController(ClientUI clientUI ){
         ui = clientUI;
+        userInfo = new UserInfo();
     }
     // Test part
     public boolean connect(String IPAddress, String username){ // 新建socket，固定主机IP，初始化用户名。
         if(username != "") userName = username;
         this.IPAddress = IPAddress;
+        userInfo.setName(userName);
         try {
             socket = new Socket(IPAddress, 8765);
 			objectOutputStream = new ObjectOutputStream( socket.getOutputStream());
@@ -103,7 +107,7 @@ public class ClientController extends Thread{
             ui.g.drawLine(x1,y1,x2,y2);
         }
     }
-
+    
     private void SendDraw(int x1,int x2,int y1,int y2,int color,int width){
         Bag bag = new Bag(userName,x1,x2,y1,y2,color,width);
         try{
