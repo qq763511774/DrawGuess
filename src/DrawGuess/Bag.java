@@ -19,7 +19,6 @@ public class Bag implements Serializable {
         this.userName = userName;
         this.status = newStatus;
     }
-
     public Bag(){}
     public Bag(String userName,int x1,int x2,int y1,int y2,int color,int width){
         this.userName = userName;

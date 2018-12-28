@@ -52,14 +52,12 @@ public class ServerThread extends Thread {
 
             System.out.println(bag.userName + ": " + bag.message);
 
-            Bag returnmsg = new Bag("Server", "" + userInfo.getUid());
-            returnmsg.status = 3;
+            Bag returnmsg = new Bag("Server", "" + userInfo.getUid(),3);
             sendToClient(returnmsg);
 
             ServerSender.addClient(this);
-            ServerSender.sendMessage(new Bag("Server", "Welcome " + this.userInfo.getName()));
+            ServerSender.sendMessage(new Bag("Server", "Welcome " + this.userInfo.getName(),3));
             //debug draw guess control
-            bag.status = 3;
             if(userInfo.getUid() == 0) bag.message = "draw";
             else bag.message = "guess";
             objectOutputStream.writeObject(bag);

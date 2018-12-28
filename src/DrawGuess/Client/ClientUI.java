@@ -1,6 +1,7 @@
 package DrawGuess.Client;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -23,8 +24,10 @@ public class ClientUI extends JFrame {
     public JTextField username;
     public boolean connect;
     public JButton readyButton;
+    public JButton clearButton;
     public JPanel loginPanel; // 登录面板
-
+    public JPanel waitPanel;
+    private int width;
     //鼠标监听器
     MouseAdapter mouseAdapter = new MouseAdapter() {
 
@@ -44,9 +47,7 @@ public class ClientUI extends JFrame {
         }
 
         public void mouseDragged(MouseEvent e) {
-            int width = (Integer) box.getSelectedItem();
-            stroke = new BasicStroke(width);
-            g.setStroke(stroke);
+            width = (Integer) box.getSelectedItem();
             int x2 = e.getX();
             int y2 = e.getY();
             controller.DrawAndSend(x1,x2,y1,y2,color.getRGB(),width);
@@ -118,17 +119,19 @@ public class ClientUI extends JFrame {
                 }
                 if(isConnected == true) {
                 	System.out.println("connected");
-                	PopDialog("水果","提示");
+                	LoginToWait();
                 	controller.start();
-                	if(controller.GetDGControl().equals("draw")){
-                	    System.out.println("UI:draw!");
-                        TransformToDrawGame();
-                    }
-                	if(controller.GetDGControl().equals("guess")){
-                	    System.out.println("UI:guess!");
-                	    TransformToGuessGame();
-                        content.setText("猜的提示信息: "+"水果");
-                    }
+//                	PopDialog("水果","提示");
+//                	controller.start();
+//                	if(controller.GetDGControl().equals("draw")){
+//                	    System.out.println("UI:draw!");
+//                        TransformToDrawGame();
+//                    }
+//                	if(controller.GetDGControl().equals("guess")){
+//                	    System.out.println("UI:guess!");
+//                	    TransformToGuessGame();
+//                        content.setText("猜的提示信息: "+"水果");
+//                    }
                 }
                 // try {
                 //     socket = new Socket(str1, 9090);
@@ -158,7 +161,14 @@ public class ClientUI extends JFrame {
     ActionListener readyButtonListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            controller.changeReady();
+            controller.ChangeReady();
+        }
+    };
+
+    ActionListener clearButtonListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            Clear();
         }
     };
 
@@ -265,17 +275,41 @@ public class ClientUI extends JFrame {
     }
 
     // remove login panel and transform
-    public void TransformToGuessGame() {
-    	this.remove(loginPanel);
-    	this.addDrawPanel();
+    public void WaitToGuessGame() {
+    	this.remove(waitPanel);
     	this.addGuessPanel();
     }
-    public void TransformToDrawGame() {
-    	this.remove(loginPanel);
+    public void WaitToDrawGame(String str) {
+    	this.remove(waitPanel);
+    	content.setText(str);
     	this.addDrawPanel();
     }
+    public void GameToWait(){
+        this.remove(drawPanel);
+        addWaitPanel();
+    }
+    private void LoginToWait(){
+        this.remove(loginPanel);
+        addWaitPanel();
+    }
+    // 创建等待面板
+    public void addWaitPanel(){
+        this.remove(loginPanel);
+        jTextArea = new JTextArea();
+        jTextArea.setLineWrap(true);
+        waitPanel = new JPanel();
+        waitPanel.setLayout(new BorderLayout());
+        waitPanel.add(jTextArea,BorderLayout.CENTER);
+        readyButton = new JButton("准备");
+        readyButton.setFocusPainted(false);
+        readyButton.setFont(new Font("方正大黑_GBK", Font.PLAIN, 20));
+        readyButton.addActionListener(readyButtonListener);
+        waitPanel.add(readyButton,BorderLayout.SOUTH);
+        this.add(waitPanel);
+    }
+
     // 创建画布面板
-    public void addDrawPanel() {
+    private void addDrawPanel() {
         drawPanel = new JPanel();
         drawPanel.setLayout(new BorderLayout());
         // 画面板的左右子面板
@@ -345,20 +379,18 @@ public class ClientUI extends JFrame {
         sendButton = new JButton();
         sendButton.setText("发送");
         sendButton.addActionListener(聊天信息发送监听器);
-
         buttonPanel.add(jTextField);
         buttonPanel.add(sendButton);
 
         drawRightPanel.add(jScrollPane);
         drawRightPanel.add(buttonPanel, BorderLayout.SOUTH);
-
-        readyButton = new JButton("准备");
-        readyButton.setFocusPainted(false);
-        readyButton.setFont(new Font("方正大黑_GBK", Font.PLAIN, 20));
-        readyButton.addActionListener(readyButtonListener);
-        colorPanel.add(readyButton);
-        readyButton.setLocation(540, 10);
-        readyButton.setSize(120, 40);
+        clearButton = new JButton("清空");
+        clearButton.setFocusPainted(false);
+        clearButton.setFont(new Font("方正大黑_GBK", Font.PLAIN, 20));
+        clearButton.addActionListener(clearButtonListener);
+        colorPanel.add(clearButton);
+        clearButton.setLocation(540, 10);
+        clearButton.setSize(120, 40);
 
 
         content.setPreferredSize(new Dimension(0, 20));
@@ -374,22 +406,23 @@ public class ClientUI extends JFrame {
         g = (Graphics2D) centerPanel.getGraphics();
         sendButton.setEnabled(false);
     }
-    public void PopDialog(String str,String str2) {
+    private void PopDialog(String str,String str2) {
     	JOptionPane.showMessageDialog(null, str,str2,JOptionPane.PLAIN_MESSAGE);
     }
     //添加猜面板的函数
-    public void addGuessPanel() {
-        content.setText("猜的提示信息");
-<<<<<<< HEAD
+    private void addGuessPanel() {
+        addDrawPanel();
+        drawPanel.remove(drawLeftPanel);
         sendButton.setEnabled(true);
-        drawLeftPanel.remove(colorPanel);
-=======
-        // sendButton.setEnabled(true);
-        // drawLeftPanel.remove(colorPanel);
->>>>>>> upstream/master
-        drawLeftPanel.repaint();
-        this.setVisible(true);
     }
-
-    
+    public void Draw(int x1,int x2,int y1,int y2){
+        stroke = new BasicStroke(width);
+        g.setStroke(stroke);
+        g.drawLine(x1,y1,x2,y2);
+    }
+    public void Clear(){
+        g.setColor(Color.WHITE);
+        g.fillRect(centerPanel.getX(),centerPanel.getY(),centerPanel.getWidth(),centerPanel.getHeight());
+        g.setColor(color);
+    }
 }
