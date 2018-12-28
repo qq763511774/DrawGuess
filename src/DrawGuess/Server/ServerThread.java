@@ -119,6 +119,10 @@ public class ServerThread extends Thread {
                         ServerSender.sendMessage(new Bag(getUserInfo().getName(), "取消准备"));
                     }
 
+                    if (bag.message.equals("CLEAR")) {
+                        ServerSender.sendMessage(bag);
+                    }
+
                 }
 
                 /*

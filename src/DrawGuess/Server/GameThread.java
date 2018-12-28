@@ -36,70 +36,67 @@ public class GameThread {
     public static void startGame() {
 
         isGaming = true;
-        ArrayList<Integer> uids = ServerSender.getUids();
+        // 本轮游戏倒计时
+        Timer timer = new Timer();
 
-        // 给客户端发一个包说明游戏已经开始
+        timer.scheduleAtFixedRate(new TimerTask() {
 
-        // try {
-        //     ServerSender.sendMessage(new Bag("Server", "STARTGAME", 3));
-        // }catch (IOException e) {
-        // }
+            ArrayList<Integer> uids = ServerSender.getUids();
 
-        for (Integer uid : uids) {
-            currpos++;
-            if (currpos > 62) currpos = 0;
+            int cnt = 60 * uids.size() + 1;
+            Iterator<Integer> iterator = uids.iterator();
 
-            // 安排玩家
-            Bag bag1 = new Bag("UID", "你需要画出" + objlist[currpos], 3);
-            bag1.x1 = uid;
-            try {
-                ServerSender.sendMessage(bag1);
-            } catch (IOException e) {
-                System.out.println("Send Exception");
-            }
+            @Override
+            public void run() {
+                cnt--;
 
-            // 本轮游戏倒计时
-            Timer timer = new Timer();
-
-            timer.scheduleAtFixedRate(new TimerTask() {
-                int cnt = 61;
-
-                @Override
-                public void run() {
-                    cnt--;
-                    if (cnt <= 0) {
-                        isGaming = false;
-                        // 给客户端发一个包表明游戏结束 返回待准备状态
-                        try {
-                            ServerSender.sendMessage(new Bag("Server", "STOPGAME", 3));
-                        } catch (IOException e) {
-                            System.out.println("Send Exception");
-                        }
-                        cancel();
+                if ( cnt <= 0) {
+                    isGaming = false;
+                    // 给客户端发一个包表明游戏结束 返回待准备状态
+                    try {
+                        ServerSender.sendMessage(new Bag("Server", "STOPGAME", 3));
+                    } catch (IOException e) {
+                        System.out.println("Send Exception");
                     }
+                    cancel();
+                }
 
-                    // 发送词语及提示
-                    if (cnt % 10 == 0) {
-                        try {
-                            ServerSender.sendMessage(new Bag("HINT", "提示：这个词语有" + objlist[currpos].length() + "个字。", 3));
-                        } catch (IOException e) {
-                            System.out.println("Send Exception");
-                        }
-                    }
+                if( cnt % 60 == 0  ) {
+                    currpos++;
+                    if (currpos > 62) currpos = 0;
 
-                    if (cnt % 10 == 4) {
-                        try {
-                            ServerSender.sendMessage(new Bag("HINT", "提示：" + objhint[currpos], 3));
-                        } catch (IOException e) {
-                            System.out.println("Send Exception");
-                        }
+                    // 安排玩家
+                    Bag bag1 = new Bag("UID", "你需要画出" + objlist[currpos], 3);
+                    bag1.x1 = iterator.next();
+                    try {
+                        ServerSender.sendMessage(bag1);
+                    } catch (IOException e) {
+                        System.out.println("Send Exception");
                     }
                 }
-            }, 0, 1000);
 
-            // try{sleep(65000);}catch(InterruptedException e){}
-        }
+                // 发送词语及提示
+                if (cnt % 10 == 0) {
+                    try {
+                        ServerSender.sendMessage(new Bag("HINT", "提示：这个词语有" + objlist[currpos].length() + "个字。", 3));
+                    } catch (IOException e) {
+                        System.out.println("Send Exception");
+                    }
+                }
+
+                if (cnt % 10 == 4) {
+                    try {
+                        ServerSender.sendMessage(new Bag("HINT", "提示：" + objhint[currpos], 3));
+                    } catch (IOException e) {
+                        System.out.println("Send Exception");
+                    }
+                }
+            }
+        }, 0, 1000);
+
+        // try{sleep(65000);}catch(InterruptedException e){}
     }
+
 
     public static String judge(String guessString) {
         // 返回的字符串为 "YES guessString" 或者 "NOP guessString"
@@ -113,11 +110,15 @@ public class GameThread {
                 return "YES " + feedback;
                 //System.out.println("YES" + feedback);
             } else {
-                for (int j = 0; j < objlist[currpos].length(); j++) {
-                    if (guessString.charAt(j) == objlist[currpos].charAt(j))
-                        feedback.append("6");
-                    else
-                        feedback.append(guessString.charAt(j));
+                for (int j = 0; j < guessString.length(); j++) {
+                    feedback.append(guessString.charAt(j));
+                    for( int jj = 0; jj < objlist[currpos].length(); jj++) {
+                        if (guessString.charAt(j) == objlist[currpos].charAt(jj)) {
+                            feedback.deleteCharAt(j);
+                            feedback.append("6");
+                            break;
+                        }
+                    }
                 }
                 //System.out.println("NOP" + feedback);
                 return "NOP " + feedback;
