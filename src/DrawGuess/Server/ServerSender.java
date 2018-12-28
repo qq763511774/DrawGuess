@@ -33,7 +33,7 @@ public class ServerSender {
     public static int counterReady(){
         int flag = 0;
         for (ServerThread aServerThreadArrayList : serverThreadArrayList) {
-            if (!aServerThreadArrayList.getUserInfo().isReady) {
+            if (aServerThreadArrayList.getUserInfo().isReady) {
                 flag ++;
             }
         }

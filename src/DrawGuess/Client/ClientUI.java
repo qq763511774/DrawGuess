@@ -281,8 +281,8 @@ public class ClientUI extends JFrame {
     }
     public void WaitToDrawGame(String str) {
     	this.remove(waitPanel);
-    	content.setText(str);
     	this.addDrawPanel();
+        content.setText(str);
     }
     public void GameToWait(){
         this.remove(drawPanel);
@@ -329,7 +329,7 @@ public class ClientUI extends JFrame {
 
         //颜色面板的颜色按钮
         Color[] colors = {Color.red, Color.black, Color.orange, Color.green,
-                Color.pink, Color.blue, Color.cyan, Color.magenta, Color.YELLOW};
+                Color.pink, Color.blue, Color.cyan, Color.magenta, Color.YELLOW, Color.WHITE};
 
         //颜色按钮添加
         ActionListener buttonListener = new ActionListener() {
