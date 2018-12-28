@@ -91,6 +91,9 @@ public class ClientController extends Thread{
                 System.out.println(message);
                 return;
             }
+            if(message.equals("startGame")){
+                ui.addDrawPanel();
+            }
         }
         if(bag.status == 2){
             int x1 = bag.x1,x2 = bag.x2,y1 = bag.y1, y2 = bag.y2, width = bag.width;
@@ -143,6 +146,28 @@ public class ClientController extends Thread{
             ui.g.drawLine(x1,y1,x2,y2);
 //            System.out.println("x1:"+x1);
             SendDraw(x1,x2,y1,y2,color,width);
+        }
+    }
+
+    public void setReady(){
+        Bag bag = new Bag(userName,"setReady");
+        bag.status = 3;
+        try{
+            objectOutputStream.writeObject(bag);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void cancelReady(){
+        Bag bag = new Bag(userName,"cancelReady");
+        bag.status = 3;
+        try{
+            objectOutputStream.writeObject(bag);
+        }
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

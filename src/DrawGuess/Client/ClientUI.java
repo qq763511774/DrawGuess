@@ -109,9 +109,12 @@ public class ClientUI extends JFrame {
                 do{
                     isConnected = controller.connect(IPAddressText, usernameText);
                 }while(isConnected == false);
-                if(isConnected == true) System.out.println("connected");
-                addDrawPanel();
-                controller.start();
+                if(isConnected == true) {
+                    System.out.println("connected");
+                    addReadyPanel();
+                    controller.start();
+                }
+
                 // try {
                 //     socket = new Socket(str1, 9090);
                 // } catch (Exception e1) {
