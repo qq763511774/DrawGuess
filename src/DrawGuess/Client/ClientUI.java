@@ -47,6 +47,7 @@ public class ClientUI extends JFrame {
         }
 
         public void mouseDragged(MouseEvent e) {
+            width = (Integer) box.getSelectedItem();
             int x2 = e.getX();
             int y2 = e.getY();
             controller.DrawAndSend(x1,x2,y1,y2,color.getRGB(),width);
@@ -413,6 +414,11 @@ public class ClientUI extends JFrame {
         addDrawPanel();
         drawPanel.remove(drawLeftPanel);
         sendButton.setEnabled(true);
+    }
+    public void Draw(int x1,int x2,int y1,int y2){
+        stroke = new BasicStroke(width);
+        g.setStroke(stroke);
+        g.drawLine(x1,y1,x2,y2);
     }
     public void SetDraw(int color,int width){
         this.width = width;
