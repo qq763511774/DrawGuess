@@ -111,7 +111,7 @@ public class ClientUI extends JFrame {
                 }while(isConnected == false);
                 if(isConnected == true) {
                     System.out.println("connected");
-                    addReadyPanel();
+                    //addReadyPanel();
                     controller.start();
                 }
 
