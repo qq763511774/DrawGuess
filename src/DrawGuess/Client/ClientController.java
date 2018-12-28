@@ -100,6 +100,7 @@ public class ClientController extends Thread{
 //            }
             if(bag.userName.equals("HINT")){
                 if(!isDraw){
+                    System.out.println("change hint!");
                     ui.content.setText(bag.message);
                 }
             }
@@ -108,6 +109,9 @@ public class ClientController extends Thread{
                 ChangeReady();
                 ui.GameToWait();
 
+            }
+            if(message.equals("CLEAR")){
+                ui.Clear();
             }
 //            if(message.equals("STARTGAME")){
 //                if(DGControl.equals("draw"))ui.WaitToDrawGame();
@@ -128,11 +132,10 @@ public class ClientController extends Thread{
             }
         }
         if(bag.status == 2){
-            int x1 = bag.x1,x2 = bag.x2,y1 = bag.y1, y2 = bag.y2, width = bag.width;
-            Color color = new Color(bag.color);
-            ui.g.setColor(color);
-//            System.out.println("x1:"+x1);
-            ui.g.drawLine(x1,y1,x2,y2);
+//            ui.g.setColor(new Color(bag.color));
+//            ui.stroke = new BasicStroke(bag.width);
+            ui.SetDraw(bag.color,bag.width);
+            ui.g.drawLine(bag.x1,bag.y1,bag.x2,bag.y2);
         }
     }
     
@@ -174,7 +177,10 @@ public class ClientController extends Thread{
 
     public void DrawAndSend(int x1,int x2,int y1,int y2,int color,int width){
         if(isDraw){
-            ui.Draw(x1,x2,y1,y2);
+//            ui.Draw(x1,x2,y1,y2,width);
+
+            ui.SetDraw(color,width);
+            ui.g.drawLine(x1,y1,x2,y2);
 //            System.out.println("x1:"+x1);
             SendDraw(x1,x2,y1,y2,color,width);
         }
@@ -200,5 +206,8 @@ public class ClientController extends Thread{
             e.printStackTrace();
         }
     }
-
+    public void SendAndClear(){
+        SendInfo("CLEAR");
+        ui.Clear();
+    }
 }

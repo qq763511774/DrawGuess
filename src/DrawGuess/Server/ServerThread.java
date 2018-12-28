@@ -75,7 +75,6 @@ public class ServerThread extends Thread {
             // long iiii = System.currentTimeMillis();
             // long jjjj = 0;
             while (true) {
-
                 obj = objectInputStream.readObject();
                 bag = (Bag) obj;
                 System.out.println(bag.userName + ": " + bag.message);
@@ -117,6 +116,9 @@ public class ServerThread extends Thread {
                     if (bag.message.equals("cancelReady")) {
                         userInfo.isReady = false;
                         ServerSender.sendMessage(new Bag(getUserInfo().getName(), "取消准备"));
+                    }
+                    if (bag.message.equals("CLEAR")) {
+                        ServerSender.sendMessage(bag);
                     }
 
                 }

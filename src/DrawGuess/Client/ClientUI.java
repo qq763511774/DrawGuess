@@ -47,7 +47,6 @@ public class ClientUI extends JFrame {
         }
 
         public void mouseDragged(MouseEvent e) {
-            width = (Integer) box.getSelectedItem();
             int x2 = e.getX();
             int y2 = e.getY();
             controller.DrawAndSend(x1,x2,y1,y2,color.getRGB(),width);
@@ -104,7 +103,7 @@ public class ClientUI extends JFrame {
             //获取发送框的内容
             String IPAddressText = IPAddress.getText();
             String usernameText = username.getText();
-            if (IPAddressText == null || !IPAddressText.matches("\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}")
+            if (!IPAddressText.matches("\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}")
                     || usernameText == null || usernameText.equals("")) {
                 JOptionPane.showMessageDialog(null, "参数错误！");
             } else {
@@ -168,7 +167,7 @@ public class ClientUI extends JFrame {
     ActionListener clearButtonListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Clear();
+            controller.SendAndClear();
         }
     };
 
@@ -415,10 +414,11 @@ public class ClientUI extends JFrame {
         drawPanel.remove(drawLeftPanel);
         sendButton.setEnabled(true);
     }
-    public void Draw(int x1,int x2,int y1,int y2){
-        stroke = new BasicStroke(width);
-        g.setStroke(stroke);
-        g.drawLine(x1,y1,x2,y2);
+    public void SetDraw(int color,int width){
+        this.width = width;
+        this.color = new Color(color);
+        g.setColor(this.color);
+        g.setStroke(new BasicStroke(width));
     }
     public void Clear(){
         g.setColor(Color.WHITE);
