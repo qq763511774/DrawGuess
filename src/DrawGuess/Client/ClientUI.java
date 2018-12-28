@@ -104,7 +104,7 @@ public class ClientUI extends JFrame {
             //获取发送框的内容
             String IPAddressText = IPAddress.getText();
             String usernameText = username.getText();
-            if (IPAddressText == null || !IPAddressText.matches("\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}")
+            if (!IPAddressText.matches("\\d{1,3}.\\d{1,3}.\\d{1,3}.\\d{1,3}")
                     || usernameText == null || usernameText.equals("")) {
                 JOptionPane.showMessageDialog(null, "参数错误！");
             } else {
@@ -168,7 +168,7 @@ public class ClientUI extends JFrame {
     ActionListener clearButtonListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Clear();
+            controller.SendAndClear();
         }
     };
 
@@ -419,6 +419,12 @@ public class ClientUI extends JFrame {
         stroke = new BasicStroke(width);
         g.setStroke(stroke);
         g.drawLine(x1,y1,x2,y2);
+    }
+    public void SetDraw(int color,int width){
+        this.width = width;
+        this.color = new Color(color);
+        g.setColor(this.color);
+        g.setStroke(new BasicStroke(width));
     }
     public void Clear(){
         g.setColor(Color.WHITE);
