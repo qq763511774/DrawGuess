@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static java.lang.Thread.sleep;
+
 public class GameThread {
     private static String[] objlist= {
             "鸽子", "布娃娃", "餐巾", "仓库", "光盘", "瓷器", "长江三峡", "长颈漏斗", "赤壁",
@@ -94,6 +96,8 @@ public class GameThread {
                     }
                 }
             }, 0, 1000);
+
+            // try{sleep(65000);}catch(InterruptedException e){}
         }
     }
 

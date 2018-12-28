@@ -281,8 +281,8 @@ public class ClientUI extends JFrame {
     }
     public void WaitToDrawGame(String str) {
     	this.remove(waitPanel);
-    	content.setText(str);
     	this.addDrawPanel();
+        content.setText(str);
     }
     public void GameToWait(){
         this.remove(drawPanel);

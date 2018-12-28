@@ -51,7 +51,7 @@ public class ServerThread extends Thread {
             userInfo.isReady = false;
 
             System.out.println(bag.userName + ": " + bag.message);
-            
+
             Bag returnmsg = new Bag("Server", "" + userInfo.getUid(), 3);
             sendToClient(returnmsg);
 

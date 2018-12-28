@@ -185,10 +185,12 @@ public class ClientController extends Thread{
         if(isReady == false){
             bag.message = "setReady";
             isReady = true;
+            ui.readyButton.setText("取消准备");
         }
         else{
             bag.message = "cancelReady";
             isReady = false;
+            ui.readyButton.setText("准备");
         }
         try{
             objectOutputStream.writeObject(bag);
