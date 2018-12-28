@@ -306,10 +306,11 @@ public class ClientUI extends JFrame {
         readyButton.addActionListener(readyButtonListener);
         waitPanel.add(readyButton,BorderLayout.SOUTH);
         this.add(waitPanel);
+        this.setVisible(true);
     }
 
     // 创建画布面板
-    private void addDrawPanel() {
+    public void addDrawPanel() {
         drawPanel = new JPanel();
         drawPanel.setLayout(new BorderLayout());
         // 画面板的左右子面板
@@ -412,7 +413,7 @@ public class ClientUI extends JFrame {
     //添加猜面板的函数
     private void addGuessPanel() {
         addDrawPanel();
-        drawPanel.remove(drawLeftPanel);
+        // drawPanel.remove(drawLeftPanel);
         sendButton.setEnabled(true);
     }
     public void Draw(int x1,int x2,int y1,int y2){

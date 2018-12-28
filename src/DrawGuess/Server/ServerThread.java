@@ -120,7 +120,6 @@ public class ServerThread extends Thread {
                     if (bag.message.equals("CLEAR")) {
                         ServerSender.sendMessage(bag);
                     }
-
                 }
 
                 /*

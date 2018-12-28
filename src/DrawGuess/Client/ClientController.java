@@ -121,13 +121,20 @@ public class ClientController extends Thread{
                 userInfo.setUid(Integer.valueOf(message));
             }
             if(bag.userName.equals("UID")){
+                if( ui.drawPanel != null ) ui.remove(ui.drawPanel);
                 if(bag.x1 == userInfo.getUid()){
                     isDraw = true;
                     ui.WaitToDrawGame(message);
+                    //ui.removeAll();
+                    //ui.addDrawPanel();
+                    //ui.sendButton.setEnabled(false);
                 }
                 else{
                     isDraw = false;
                     ui.WaitToGuessGame();
+                    //ui.removeAll();
+                    //ui.addDrawPanel();
+                    //ui.sendButton.setEnabled(true);
                 }
             }
         }
