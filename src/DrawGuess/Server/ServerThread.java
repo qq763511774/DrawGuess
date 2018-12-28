@@ -52,12 +52,17 @@ public class ServerThread extends Thread {
 
             System.out.println(bag.userName + ": " + bag.message);
 
-            Bag returnmsg = new Bag("Server", "" + userInfo.getUid());
+            Bag returnmsg = new Bag("Server", "" + userInfo.getUid(),3);
             sendToClient(returnmsg);
 
             ServerSender.addClient(this);
-            ServerSender.sendMessage(new Bag("Server", "Welcome " + this.userInfo.getName()));
-
+            ServerSender.sendMessage(new Bag("Server", "Welcome " + this.userInfo.getName(),3));
+            //debug draw guess control
+            if(userInfo.getUid() == 0) bag.message = "draw";
+            else bag.message = "guess";
+            objectOutputStream.writeObject(bag);
+            objectOutputStream.flush();
+            //debug
             /*
             从用户那里收到一条信息 采用序列化的类的实例
             while( ！实例中拥有退出房间的信息 ){
