@@ -1,7 +1,6 @@
 package DrawGuess;
 
 import java.io.Serializable;
-import java.awt.Color;
 
 public class Bag implements Serializable {
     public int x1,x2,y1,y2,width;
