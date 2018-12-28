@@ -122,11 +122,11 @@ public class ClientController extends Thread{
             objectOutputStream.writeObject(bag);
             objectOutputStream.flush();
             System.out.println("message sended!");
-            return str;
+            return "";
         }
         catch (IOException e){
             e.printStackTrace();
-            return "";
+            return str;
         }
     }
 

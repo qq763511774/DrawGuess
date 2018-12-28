@@ -84,7 +84,11 @@ public class ServerThread extends Thread {
                     // 把结果发送给所有人
                     if (结果.equals("YES")) { // 猜对了
                         ServerSender.sendMessage(new Bag("Server", userInfo.getName() + "猜对了答案"));
-                    } else { // 猜错了
+                    } else if(结果.equals("NOP")){ // 猜错了
+                        bag.message = 处理串;
+                        ServerSender.sendMessage(bag);
+                    }
+                    else{
                         bag.message = 处理串;
                         ServerSender.sendMessage(bag);
                     }
@@ -96,14 +100,18 @@ public class ServerThread extends Thread {
 
                     if (bag.message.equals("setReady")) {
                         userInfo.isReady = true;
-                        if (ServerSender.allReady()) { // 所有人都准备好了
+                        if (ServerSender.counterReady() == ServerSender.getThreadNumber()) { // 所有人都准备好了
                             // 开始游戏
                             GameThread.startGame(ServerSender.getThreadNumber());
+                        }
+                        else {
+                            ServerSender.sendMessage(new Bag("Server", "还有" + "人尚未准备"));
                         }
                     }
 
                     if (bag.message.equals("cancelReady")) {
                         userInfo.isReady = false;
+                        ServerSender.sendMessage(new Bag(getUserInfo().getName(), "取消准备"));
                     }
 
                 }

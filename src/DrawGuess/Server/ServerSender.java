@@ -30,12 +30,11 @@ public class ServerSender {
         }
     }
 
-    public static boolean allReady(){
-        boolean flag = true;
+    public static int counterReady(){
+        int flag = 0;
         for (ServerThread aServerThreadArrayList : serverThreadArrayList) {
             if (!aServerThreadArrayList.getUserInfo().isReady) {
-                flag = false;
-                break;
+                flag ++;
             }
         }
 
