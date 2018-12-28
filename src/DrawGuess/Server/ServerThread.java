@@ -82,9 +82,9 @@ public class ServerThread extends Thread {
                     String 处理串 = tempString.substring(4);
 
                     // 把结果发送给所有人
-                    if (结果.equals("YES")) {
+                    if (结果.equals("YES")) { // 猜对了
                         ServerSender.sendMessage(new Bag("Server", userInfo.getName() + "猜对了答案"));
-                    } else {
+                    } else { // 猜错了
                         bag.message = 处理串;
                         ServerSender.sendMessage(bag);
                     }
@@ -92,9 +92,9 @@ public class ServerThread extends Thread {
                     // 直接进行转发
                     ServerSender.sendMessage(bag);
                 } else if (bag.status == 3) { // 收到的状态信息
-                    if (bag.message == "DISCONNECT") break; // 客户主动断开连接
+                    if (bag.message.equals("DISCONNECT")) break; // 客户主动断开连接
 
-                    if (bag.message == "setReady") {
+                    if (bag.message.equals("setReady")) {
                         userInfo.isReady = true;
                         if (ServerSender.allReady()) { // 所有人都准备好了
                             // 开始游戏
@@ -102,7 +102,7 @@ public class ServerThread extends Thread {
                         }
                     }
 
-                    if (bag.message == "cancelReady") {
+                    if (bag.message.equals("cancelReady")) {
                         userInfo.isReady = false;
                     }
 
