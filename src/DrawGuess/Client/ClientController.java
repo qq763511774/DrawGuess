@@ -149,4 +149,8 @@ public class ClientController extends Thread{
             SendDraw(x1,x2,y1,y2,color,width);
         }
     }
+
+    public void changeReady(){
+        // 向服务器更新准备状态
+    }
 }

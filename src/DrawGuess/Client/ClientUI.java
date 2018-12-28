@@ -22,7 +22,9 @@ public class ClientUI extends JFrame {
     public JTextField IPAddress;
     public JTextField username;
     public boolean connect;
+    public JButton readyButton;
     public JPanel loginPanel; // 登录面板
+
     //鼠标监听器
     MouseAdapter mouseAdapter = new MouseAdapter() {
 
@@ -143,6 +145,13 @@ public class ClientUI extends JFrame {
 
         public void actionPerformed(ActionEvent e) {
             sendButton.doClick();
+        }
+    };
+
+    ActionListener readyButtonListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            controller.changeReady();
         }
     };
 
@@ -336,6 +345,15 @@ public class ClientUI extends JFrame {
         drawRightPanel.add(jScrollPane);
         drawRightPanel.add(buttonPanel, BorderLayout.SOUTH);
 
+        readyButton = new JButton("准备");
+        readyButton.setFocusPainted(false);
+        readyButton.setFont(new Font("方正大黑_GBK", Font.PLAIN, 20));
+        readyButton.addActionListener(readyButtonListener);
+        colorPanel.add(readyButton);
+        readyButton.setLocation(540, 10);
+        readyButton.setSize(120, 40);
+
+
         content.setPreferredSize(new Dimension(0, 20));
         drawLeftPanel.add(content, BorderLayout.NORTH);
         drawLeftPanel.add(centerPanel, BorderLayout.CENTER);
@@ -354,8 +372,8 @@ public class ClientUI extends JFrame {
     //添加猜面板的函数
     public void addGuessPanel() {
         content.setText("猜的提示信息");
-        sendButton.setEnabled(true);
-        drawLeftPanel.remove(colorPanel);
+        // sendButton.setEnabled(true);
+        // drawLeftPanel.remove(colorPanel);
         drawLeftPanel.repaint();
         this.setVisible(true);
     }
